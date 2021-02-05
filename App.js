@@ -1,11 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
+
+  const [price, setPrice] = useState('Click button to check');
+
+
+  function checkPrice() {
+      let btcUrl = 'https://api.coindesk.com/v1/bpi/currentprice/BTC.json';
+      fetch(btcUrl)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            setPrice(responseJson.bpi.USD.rate);
+      })
+      .catch((error) => {
+          console.error(error);
+      });
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>BTC price: {price}</Text>
+      <Button title= "Check BTC price" onPress={() => checkPrice()}/>
       <StatusBar style="auto" />
     </View>
   );
